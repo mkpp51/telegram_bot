@@ -30,14 +30,14 @@ def start_handler(message: telebot.types.Message):
 
 
 def quote_handler(message: telebot.types.Message):
-    quote = message.text.strip()
+    quote = message.text.strip().capitalize()
     text = 'Валюта, в которую конвертировать?'
     bot.send_message(message.chat.id, text)
     bot.register_next_step_handler(message, base_handler, quote)
 
 
 def base_handler(message: telebot.types.Message, quote):
-    base = message.text.strip()
+    base = message.text.strip().capitalize()
     text = 'Количество конвертируемой валюты?'
     bot.send_message(message.chat.id, text)
     bot.register_next_step_handler(message, amount_handler, quote, base)
