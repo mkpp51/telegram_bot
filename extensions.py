@@ -12,7 +12,7 @@ class CurrencyExchange:
     def get_price(quote: str, base: str, amount: str):
 
         if quote == base:
-            raise APIException(f'Одинаковые валюты!{quote}')
+            raise APIException(f'Одинаковые валюты! {quote}')
 
         try:
             quote_ticker = currs[quote]

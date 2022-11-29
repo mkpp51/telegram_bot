@@ -25,23 +25,33 @@ def values(message: telebot.types.Message):
     bot.reply_to(message, text)
 
 
-@bot.message_handler(content_types=['text', ])
-def exchange(message: telebot.types.Message):
+@bot.message_handler(commands=['exchange'])
+def start_handler(message: telebot.types.Message):
+    text = 'Валюта, из которой конвертировать?'
+    bot.send_message(message.chat.id, text)
+    bot.register_next_step_handler(message, quote_handler)
+
+
+def quote_handler(message: telebot.types.Message):
+    quote = message.text.strip()
+    text = 'Валюта, в которую конвертировать?'
+    bot.send_message(message.chat.id, text)
+    bot.register_next_step_handler(message, base_handler, quote)
+
+
+def base_handler(message: telebot.types.Message, quote):
+    base = message.text.strip()
+    text = 'Количество конвертируемой валюты?'
+    bot.send_message(message.chat.id, text)
+    bot.register_next_step_handler(message, amount_handler, quote, base)
+
+
+def amount_handler(message: telebot.types.Message, quote, base):
+    amount = message.text.strip()
     try:
-        values = message.text.split(' ')
-
-        if len(values) != 3:
-            raise APIException('Неверное количество параметров!')
-
-        quote, base, amount = values
         total_base = CurrencyExchange.get_price(quote, base, amount)
-
     except APIException as e:
-        bot.reply_to(message, f'Ошибка пользователя.\n {e}')
-
-    except Exception as e:
-        bot.reply_to(message, f'Не удалось обработать команду.\n{e}')
-
+        bot.send_message(message.chat.id, f'Ошибка конвертации!\n{e}')
     else:
         text = f'Цена {amount} {quote} в {base} - {total_base}'
         bot.send_message(message.chat.id, text)
