@@ -9,12 +9,9 @@ bot = telebot.TeleBot(TOKEN)
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
     print(message.text)
-    bot.reply_to(message, f"Привет, {message.chat.username}! Введи свой запрос в формате:\n"
-                          f" <имя валюты, цену которой хочешь узнать> "
-                          f"<имя валюты, в которой надо узнать цену первой валюты> "
-                          f"<количество первой валюты>. \n"
-                          f"Название валют указывайте с маленькой буквы.\n"
-                          f"Чтобы увидеть список всех доступных валют, воспользуйся командой: /values.")
+    bot.reply_to(message, f"Привет, {message.chat.username}!\n"
+                          f"Чтобы увидеть список всех доступных валют, воспользуйся командой: /values.\n"
+                          f"Чтобы начать конвертацию, воспользуйся командой: /exchange.")
 
 
 @bot.message_handler(commands=['values'])
